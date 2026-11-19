@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/calculator_fiscal_client_friendly_2025.html" }
+  ]
+}

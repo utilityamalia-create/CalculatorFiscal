@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator comparativ: Micro / Profit / PFA — 2025</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --panel: rgba(255, 255, 255, 0.86);
+      --panel-solid: #ffffff;
+      --text: #121826;
+      --muted: #667085;
+      --line: #e6e8ef;
+      --accent: #1d3557;
+      --accent-2: #e63946;
+      --good: #107c41;
+      --warn: #b54708;
+      --soft-blue: #eaf1ff;
+      --soft-red: #fff0f1;
+      --shadow: 0 18px 45px rgba(16, 24, 40, 0.08);
+      --radius: 22px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(29, 53, 87, 0.13), transparent 28%),
+        radial-gradient(circle at 85% 0%, rgba(230, 57, 70, 0.11), transparent 24%),
+        var(--bg);
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 46px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .hero,
+    .input-card,
+    .card,
+    .table-card,
+    details {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero { padding: 28px; }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: .02em;
+      color: var(--accent);
+      background: var(--soft-blue);
+      border: 1px solid #d8e4ff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 4vw, 54px);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .subtitle {
+      margin: 16px 0 0;
+      max-width: 770px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .input-card {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .money-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 10px 14px;
+    }
+
+    .money-input input {
+      width: 100%;
+      border: 0;
+      outline: none;
+      font-size: 38px;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .money-input span {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .quick-grid button,
+    .print-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      font-weight: 800;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: transform .15s ease, border .15s ease, background .15s ease;
+    }
+
+    .quick-grid button:hover,
+    .print-btn:hover { transform: translateY(-1px); border-color: #bac4d5; }
+
+    .winner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 22px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #13253f, #1d3557 58%, #274d80);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .winner .small { color: rgba(255,255,255,.72); font-size: 13px; font-weight: 750; text-transform: uppercase; letter-spacing: .04em; }
+    .winner h2 { margin: 6px 0 8px; font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.04em; }
+    .winner p { margin: 0; color: rgba(255,255,255,.82); line-height: 1.45; }
+    .winner .amount { text-align: right; font-size: clamp(28px, 3.2vw, 44px); font-weight: 900; letter-spacing: -0.05em; white-space: nowrap; }
+    .winner .amount span { display: block; font-size: 13px; color: rgba(255,255,255,.68); letter-spacing: 0; font-weight: 700; margin-top: 4px; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      position: relative;
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .card.best {
+      border: 1px solid rgba(16,124,65,.28);
+      background: linear-gradient(180deg, rgba(239, 255, 246, .92), rgba(255,255,255,.9));
+    }
+
+    .rank {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 850;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      margin-bottom: 14px;
+    }
+
+    .card.best .rank { color: var(--good); border-color: rgba(16,124,65,.22); }
+
+    .scenario-name {
+      font-size: 17px;
+      font-weight: 900;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .net {
+      font-size: 31px;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      margin: 0;
+    }
+
+    .muted { color: var(--muted); }
+
+    .metric-list {
+      margin: 14px 0 0;
+      padding: 12px 0 0;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .metric-list div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .metric-list strong { font-family: var(--mono); font-weight: 800; }
+
+    .bar-wrap {
+      height: 9px;
+      background: #eef1f6;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .bar { height: 100%; width: 0%; background: var(--accent); border-radius: inherit; transition: width .25s ease; }
+    .best .bar { background: var(--good); }
+
+    .table-card { padding: 20px; margin-bottom: 18px; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-head h3 { margin: 0; font-size: 22px; letter-spacing: -0.03em; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 13px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      background: #fafbfe;
+    }
+
+    td.num, th.num { text-align: right; font-family: var(--mono); }
+    tr:last-child td { border-bottom: 0; }
+    tr.highlight td { background: #f2fff7; }
+
+    details {
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .settings input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 11px 12px;
+      font-size: 15px;
+      background: #fff;
+    }
+
+    .note {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 850;
+      background: var(--soft-red);
+      color: #9f1d2a;
+      border: 1px solid #ffd9dd;
+    }
+
+    @media (max-width: 980px) {
+      header { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .settings { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 20px, 1180px); padding-top: 18px; }
+      .hero, .input-card, .winner, .table-card, details { border-radius: 18px; }
+      .cards { grid-template-columns: 1fr; }
+      .winner { grid-template-columns: 1fr; }
+      .winner .amount { text-align: left; }
+      .quick-grid { grid-template-columns: repeat(2, 1fr); }
+      .settings { grid-template-columns: 1fr; }
+      th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5) { display: none; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .wrap { width: 100%; padding: 0; }
+      .input-card, details, .print-btn { display: none !important; }
+      header { display: block; }
+      .hero, .winner, .card, .table-card { box-shadow: none; border: 1px solid #ddd; background: #fff; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <section class="hero">
+        <div class="eyebrow">Calculator fiscal comparativ · 2025</div>
+        <h1>Micro, profit sau PFA — pe cifre, nu pe impresii.</h1>
+        <p class="subtitle">
+          Introduci venitul lunar estimat și calculatorul compară netul lunar final, taxele lunare și rata fiscală efectivă pentru cele patru scenarii din modelul tău: micro cu angajat, profit fără angajat, profit cu angajat și PFA.
+        </p>
+      </section>
+
+      <aside class="input-card">
+        <div>
+          <label for="income">Venit lunar facturat</label>
+          <div class="money-input">
+            <input id="income" type="number" min="0" step="100" value="17500" />
+            <span>lei</span>
+          </div>
+        </div>
+        <input id="incomeRange" type="range" min="1000" max="100000" step="500" value="17500" />
+        <div class="quick-grid">
+          <button data-income="5000">5.000</button>
+          <button data-income="10000">10.000</button>
+          <button data-income="17500">17.500</button>
+          <button data-income="30000">30.000</button>
+        </div>
+        <button class="print-btn" onclick="window.print()">Printează / salvează PDF</button>
+      </aside>
+    </header>
+
+    <section id="winner" class="winner"></section>
+
+    <section id="cards" class="cards"></section>
+
+    <section class="table-card">
+      <div class="section-head">
+        <div>
+          <h3>Comparație pe scenarii</h3>
+          <p>Valorile sunt lunare, cu CASS anual lunarizat unde este cazul.</p>
+        </div>
+        <span class="pill">Model simplificat</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Scenariu</th>
+            <th class="num">Net lunar final</th>
+            <th class="num">Taxe lunare</th>
+            <th class="num">Rată efectivă</th>
+            <th class="num">CASS anual separat</th>
+            <th>Observație</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </section>
+
+    <details>
+      <summary>Setări avansate folosite în calcul</summary>
+      <div class="settings">
+        <div>
+          <label for="salaryGross">Salariu brut angajat</label>
+          <input id="salaryGross" type="number" min="0" step="100" value="4200" />
+        </div>
+        <div>
+          <label for="minimumSalary">Salariu minim brut</label>
+          <input id="minimumSalary" type="number" min="0" step="50" value="4050" />
+        </div>
+        <div>
+          <label for="pfaExpenses">Cheltuieli PFA anual</label>
+          <input id="pfaExpenses" type="number" min="0" step="100" value="0" />
+        </div>
+        <div>
+          <label for="eurRate">Curs EUR orientativ</label>
+          <input id="eurRate" type="number" min="1" step="0.01" value="5.2" />
+        </div>
+      </div>
+      <p class="note">
+        Cote implicite: CASS 10%, CAS 25%, impozit PFA 10%, micro 1%, impozit profit 16%, impozit dividende 16%, rețineri salariale modelate generic la 41,5%, CAM 2,26%. Logica este păstrată din Excelul comparativ.
+      </p>
+    </details>
+
+    <details>
+      <summary>Logica CASS folosită</summary>
+      <p class="note">
+        Pentru PFA: baza CASS este venitul net, dar nu mai puțin de 6 salarii minime și nu mai mult de 60 salarii minime, dacă există venit. Pentru dividende: se aplică plafoanele fixe 6 / 12 / 24 salarii minime, în funcție de venitul anual din dividende din model.
+      </p>
+    </details>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const defaults = {
+      healthRate: 0.10,
+      pensionRate: 0.25,
+      pfaTaxRate: 0.10,
+      microTaxRate: 0.01,
+      profitTaxRate: 0.16,
+      dividendTaxRate: 0.16,
+      employeeWithholdingRate: 0.415,
+      camRate: 0.0226
+    };
+
+    const fmt = new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 });
+    const fmt2 = new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 2 });
+    const pct = new Intl.NumberFormat('ro-RO', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+    function money(value) {
+      return `${fmt.format(Math.round(value || 0))} lei`;
+    }
+
+    function money2(value) {
+      return `${fmt2.format(value || 0)} lei`;
+    }
+
+    function readInputs() {
+      return {
+        income: Number($('income').value) || 0,
+        salaryGross: Number($('salaryGross').value) || 0,
+        minimumSalary: Number($('minimumSalary').value) || 0,
+        pfaExpenses: Number($('pfaExpenses').value) || 0,
+        eurRate: Number($('eurRate').value) || 1
+      };
+    }
+
+    function cassDividends(annualDividendIncome, minimumSalary) {
+      const p6 = minimumSalary * 6;
+      const p12 = minimumSalary * 12;
+      const p24 = minimumSalary * 24;
+
+      let base = 0;
+      let label = 'sub 6 salarii';
+
+      if (annualDividendIncome >= p6 && annualDividendIncome < p12) {
+        base = p6;
+        label = 'bază 6 salarii';
+      } else if (annualDividendIncome >= p12 && annualDividendIncome < p24) {
+        base = p12;
+        label = 'bază 12 salarii';
+      } else if (annualDividendIncome >= p24) {
+        base = p24;
+        label = 'bază 24 salarii';
+      }
+
+      return {
+        base,
+        tax: base * defaults.healthRate,
+        label
+      };
+    }
+
+    function calcCompanyScenario({ name, income, salaryGross, minimumSalary, eurRate, type }) {
+      const employeeNet = salaryGross * (1 - defaults.employeeWithholdingRate);
+      const salaryTaxes = salaryGross * defaults.employeeWithholdingRate;
+      const cam = salaryGross * defaults.camRate;
+
+      let companyTax = 0;
+      let taxableProfit = 0;
+      let dividendGross = 0;
+      let note = '';
+
+      if (type === 'micro') {
+        companyTax = income * defaults.microTaxRate;
+        taxableProfit = income - salaryGross - cam - companyTax;
+        dividendGross = Math.max(taxableProfit, 0);
+        note = 'Include salariu net + dividend net; CASS dividende lunarizat.';
+      }
+
+      if (type === 'profit-no-employee') {
+        taxableProfit = income;
+        companyTax = Math.max(taxableProfit, 0) * defaults.profitTaxRate;
+        dividendGross = Math.max(taxableProfit - companyTax, 0);
+        note = 'Fără salariu; profitul rămas merge în dividend.';
+      }
+
+      if (type === 'profit-employee') {
+        taxableProfit = income - salaryGross - cam;
+        companyTax = Math.max(taxableProfit, 0) * defaults.profitTaxRate;
+        dividendGross = Math.max(taxableProfit - companyTax, 0);
+        note = 'Include salariu net + dividend net; CASS dividende lunarizat.';
+      }
+
+      const dividendTax = dividendGross * defaults.dividendTaxRate;
+      const dividendNet = dividendGross - dividendTax;
+      const annualDividendIncome = dividendNet * 12;
+      const cass = cassDividends(annualDividendIncome, minimumSalary);
+      const salaryComponent = type === 'profit-no-employee' ? 0 : employeeNet;
+      const netBeforeCass = salaryComponent + dividendNet;
+      const netMonthly = netBeforeCass - cass.tax / 12;
+      const totalMonthlyTaxes = income - netMonthly;
+
+      return {
+        name,
+        type,
+        netMonthly,
+        netEur: netMonthly / eurRate,
+        totalMonthlyTaxes,
+        effectiveRate: income > 0 ? totalMonthlyTaxes / income : 0,
+        cassAnnual: cass.tax,
+        cassLabel: cass.label,
+        note,
+        details: {
+          employeeNet,
+          salaryTaxes,
+          cam,
+          companyTax,
+          dividendGross,
+          dividendTax,
+          dividendNet,
+          annualDividendIncome
+        }
+      };
+    }
+
+    function calcPfa({ income, minimumSalary, pfaExpenses, eurRate }) {
+      const grossAnnual = income * 12;
+      const netBeforeContributions = Math.max(grossAnnual - pfaExpenses, 0);
+      const p6 = minimumSalary * 6;
+      const p12 = minimumSalary * 12;
+      const p24 = minimumSalary * 24;
+      const p60 = minimumSalary * 60;
+
+      const cassBase = netBeforeContributions > 0 ? Math.min(Math.max(netBeforeContributions, p6), p60) : 0;
+      const cass = cassBase * defaults.healthRate;
+
+      let casBase = 0;
+      if (netBeforeContributions >= p12 && netBeforeContributions < p24) casBase = p12;
+      if (netBeforeContributions >= p24) casBase = p24;
+      const cas = casBase * defaults.pensionRate;
+
+      const incomeTaxBase = Math.max(netBeforeContributions - cass - cas, 0);
+      const incomeTax = incomeTaxBase * defaults.pfaTaxRate;
+      const totalAnnualTaxes = cass + cas + incomeTax;
+      const netAnnual = grossAnnual - pfaExpenses - totalAnnualTaxes;
+      const netMonthly = netAnnual / 12;
+      const totalMonthlyTaxes = income - netMonthly;
+
+      return {
+        name: 'PFA',
+        type: 'pfa',
+        netMonthly,
+        netEur: netMonthly / eurRate,
+        totalMonthlyTaxes,
+        effectiveRate: income > 0 ? totalMonthlyTaxes / income : 0,
+        cassAnnual: cass,
+        cassLabel: `bază ${money(cassBase)}`,
+        note: 'Include CASS PFA 2025 cu minim 6 și maxim 60 salarii.',
+        details: {
+          grossAnnual,
+          netBeforeContributions,
+          cassBase,
+          cass,
+          casBase,
+          cas,
+          incomeTaxBase,
+          incomeTax,
+          totalAnnualTaxes,
+          netAnnual
+        }
+      };
+    }
+
+    function calculate() {
+      const input = readInputs();
+
+      const scenarios = [
+        calcCompanyScenario({ ...input, name: 'Micro + angajat', type: 'micro' }),
+        calcCompanyScenario({ ...input, name: 'Profit fără angajat', type: 'profit-no-employee', salaryGross: 0 }),
+        calcCompanyScenario({ ...input, name: 'Profit + angajat', type: 'profit-employee' }),
+        calcPfa(input)
+      ].sort((a, b) => b.netMonthly - a.netMonthly);
+
+      renderWinner(scenarios, input);
+      renderCards(scenarios, input);
+      renderRows(scenarios);
+    }
+
+    function renderWinner(scenarios, input) {
+      const best = scenarios[0];
+      const second = scenarios[1];
+      const diff = best.netMonthly - second.netMonthly;
+      $('winner').innerHTML = `
+        <div>
+          <div class="small">Cea mai avantajoasă variantă la ${money(input.income)} / lună</div>
+          <h2>${best.name}</h2>
+          <p>Diferență față de locul 2: <strong>${money2(diff)}</strong> pe lună. Dacă diferența este mică, decizia nu trebuie luată doar fiscal; contează și riscul, administrarea și predictibilitatea.</p>
+        </div>
+        <div class="amount">${money2(best.netMonthly)}<span>net lunar final</span></div>
+      `;
+    }
+
+    function renderCards(scenarios) {
+      const maxNet = Math.max(...scenarios.map(s => s.netMonthly), 1);
+      $('cards').innerHTML = scenarios.map((s, index) => `
+        <article class="card ${index === 0 ? 'best' : ''}">
+          <div class="rank">${index === 0 ? '✓ Recomandat' : `Locul ${index + 1}`}</div>
+          <h3 class="scenario-name">${s.name}</h3>
+          <p class="net">${money2(s.netMonthly)}</p>
+          <div class="muted">${fmt2.format(s.netEur)} EUR / lună</div>
+          <div class="bar-wrap"><div class="bar" style="width: ${(s.netMonthly / maxNet) * 100}%"></div></div>
+          <div class="metric-list">
+            <div><span>Taxe lunare</span><strong>${money2(s.totalMonthlyTaxes)}</strong></div>
+            <div><span>Rată efectivă</span><strong>${pct.format(s.effectiveRate)}</strong></div>
+            <div><span>CASS anual</span><strong>${money2(s.cassAnnual)}</strong></div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function renderRows(scenarios) {
+      $('rows').innerHTML = scenarios.map((s, index) => `
+        <tr class="${index === 0 ? 'highlight' : ''}">
+          <td><strong>${s.name}</strong></td>
+          <td class="num">${money2(s.netMonthly)}</td>
+          <td class="num">${money2(s.totalMonthlyTaxes)}</td>
+          <td class="num">${pct.format(s.effectiveRate)}</td>
+          <td class="num">${money2(s.cassAnnual)}<br><span class="muted">${s.cassLabel}</span></td>
+          <td>${s.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function syncIncome(value) {
+      const safe = Math.max(0, Number(value) || 0);
+      $('income').value = safe;
+      $('incomeRange').value = Math.min(Math.max(safe, Number($('incomeRange').min)), Number($('incomeRange').max));
+      calculate();
+    }
+
+    $('income').addEventListener('input', (e) => syncIncome(e.target.value));
+    $('incomeRange').addEventListener('input', (e) => syncIncome(e.target.value));
+    ['salaryGross', 'minimumSalary', 'pfaExpenses', 'eurRate'].forEach(id => {
+      $(id).addEventListener('input', calculate);
+    });
+
+    document.querySelectorAll('[data-income]').forEach(btn => {
+      btn.addEventListener('click', () => syncIncome(btn.dataset.income));
+    });
+
+    calculate();
+  </script>
+</body>
+</html>
